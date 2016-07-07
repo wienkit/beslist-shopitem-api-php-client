@@ -45,4 +45,4 @@ $update = [
 $this->client->updateShopItem($shopId, $itemId, $update);
 ```
 
-See the tests folder for more information and examples
+See the tests folder for more information and examples.
