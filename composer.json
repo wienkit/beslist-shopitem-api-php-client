@@ -1,0 +1,30 @@
+{
+  "name": "wienkit/beslist-shopitem-api-php-client",
+  "description": "Beslist.nl Shopitem API client PHP",
+  "keywords": [
+    "api",
+    "php",
+    "beslist",
+    "beslist.nl"
+  ],
+  "homepage": "https://github.com/wienkit/beslist-shopitem-api-php-client",
+  "require": {
+    "php": ">=5.5.9",
+    "tcdent/php-restclient": "^0.1.5"
+  },
+  "require-dev": {
+      "phpunit/phpunit": "^5.4"
+  },
+  "license": "MIT",
+  "authors": [
+      {
+          "name": "Mark Wienk",
+          "email": "mark@wienkit.nl"
+      }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Wienkit\\BeslistShopitemClient\\": "src/"
+    }
+  }
+}
