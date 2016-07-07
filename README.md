@@ -9,7 +9,7 @@ Run the command:
 composer require wienkit/beslist-shopitem-api-php-client
 ```
 
-## Example: get shopitem
+## Examples
 ```php
 <?php
 
@@ -45,4 +45,4 @@ $update = [
 $this->client->updateShopItem($shopId, $itemId, $update);
 ```
 
-See the tests folder for more information
+See the tests folder for more information and examples
