@@ -6,12 +6,21 @@ class BeslistShopitemClientTest extends PHPUnit_Framework_TestCase
      */
     private $client;
 
-    private $shopId = 12345;
-    private $itemId = '12abcd13';
+    /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
+     * @var string
+     */
+    private $itemId;
 
     public function setUp()
     {
         $apiKey = '-- YOUR SHOPITEM API KEY --';
+        $this->shopId = 12345; // -- YOUR SHOP ID --
+        $this->itemId = '12abcd13'; // -- YOUR TEST ITEM ID --
         $this->client = new Wienkit\BeslistShopitemClient\BeslistShopitemClient($apiKey);
         $this->client->setTestMode(TRUE);
     }
