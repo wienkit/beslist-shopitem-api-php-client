@@ -99,7 +99,7 @@ class BeslistShopitemClient
     public function getShopItem($shopId, $productId)
     {
         try {
-            $result = $this->api->get("product/v2/shops/" . $shopId . "/items/" . $productId);
+            $result = $this->api->get("product/v1/shops/" . $shopId . "/items/" . $productId);
             if($result->info->http_code == 200) {
                 return new ShopItem($result->decode_response());
             } else {
