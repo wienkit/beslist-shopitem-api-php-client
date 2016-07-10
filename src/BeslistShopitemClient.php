@@ -6,8 +6,6 @@ use Wienkit\BeslistShopitemClient\Entities\AuthenticationResult;
 use Wienkit\BeslistShopitemClient\Entities\ShopItem;
 use Wienkit\BeslistShopitemClient\Exceptions\BeslistShopitemException;
 
-require_once dirname(__FILE__).'/../vendor/autoload.php';
-
 class BeslistShopitemClient
 {
     const BASE_URL = 'https://shopitem.api.beslist.nl/';
