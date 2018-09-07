@@ -1,106 +1,171 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mark
- * Date: 7/7/16
- * Time: 6:09 PM
- */
 
 namespace Wienkit\BeslistShopitemClient\Entities;
 
-
-class ShopItem
+/**
+ * Class ShopItem
+ *
+ * @package Wienkit\BeslistShopitemClient\Entities
+ */
+class ShopItem implements \JsonSerializable
 {
-
-    /**
-     * @var float
-     */
-    public $price;
-
-    /**
-     * @var string
-     */
-    public $price_updated;
-
-    /**
-     * @var float
-     */
-    public $discount_price;
-
-    /**
-     * @var string
-     */
-    public $discount_price_updated;
-
-    /**
-     * @var float
-     */
-    public $delivery_cost_nl;
-
-    /**
-     * @var string
-     */
-    public $delivery_cost_nl_updated;
-
-    /**
-     * @var float
-     */
-    public $delivery_cost_be;
-
-    /**
-     * @var string
-     */
-    public $delivery_cost_be_updated;
-
-    /**
-     * @var string
-     */
-    public $delivery_time_nl;
-
-    /**
-     * @var string
-     */
-    public $delivery_time_nl_updated;
-
-    /**
-     * @var string
-     */
-    public $delivery_time_be;
-
-    /**
-     * @var string
-     */
-    public $delivery_time_be_updated;
-
     /**
      * @var int
      */
-    public $stock;
+    protected $shopId;
 
     /**
      * @var string
      */
-    public $stock_updated;
+    protected $externalId;
+
+    /**
+     * @var PriceField
+     */
+    protected $price;
+
+    /**
+     * @var ShippingField[]
+     */
+    protected $shipping;
+
+    /**
+     * @var StockField
+     */
+    protected $stock;
+
+    /**
+     * Instantiates a new Offer/ShopItem from an array
+     * @param array $values
+     * @return ShopItem
+     */
+    public static function fromArray(array $values)
+    {
+        $price = PriceField::fromArray($values['price']);
+        $shipping = [];
+        foreach ($values['shipping'] as $destination) {
+            $shipping[] = ShippingField::fromArray($destination);
+        }
+        $stock = StockField::fromArray($values['stock']);
+        return new static($price, $shipping, $stock);
+    }
+
+    /**
+     * Returns a full ShopItem from the http response.
+     * @param array $response
+     * @return ShopItem
+     */
+    public static function fromResponse(array $response)
+    {
+        $item = self::fromArray($response);
+        $item->setShopId($response['shopId']);
+        $item->setExternalId($response['externalId']);
+        return $item;
+    }
 
     /**
      * ShopItem constructor.
-     * @param $response
+     * @param PriceField $price
+     * @param array $shipping
+     * @param StockField $stock
      */
-    public function __construct($response)
+    public function __construct(PriceField $price, array $shipping, StockField $stock)
     {
-        $this->price = $response['price']['value'];
-        $this->price_updated = $response['price']['last_update'];
-        $this->discount_price = $response['discount_price']['value'];
-        $this->discount_price_updated = $response['discount_price']['last_update'];
-        $this->delivery_cost_nl = $response['delivery_cost_nl']['value'];
-        $this->delivery_cost_nl_updated = $response['delivery_cost_nl']['last_update'];
-        $this->delivery_cost_be = $response['delivery_cost_be']['value'];
-        $this->delivery_cost_be_updated = $response['delivery_cost_be']['last_update'];
-        $this->delivery_time_nl = $response['delivery_time_nl']['commercial'];
-        $this->delivery_time_nl_updated = $response['delivery_time_nl']['last_update'];
-        $this->delivery_time_be = $response['delivery_time_be']['commercial'];
-        $this->delivery_time_be_updated = $response['delivery_time_be']['last_update'];
-        $this->stock = $response['stock']['value'];
-        $this->stock_updated= $response['stock']['last_update'];
+        $this->price = $price;
+        $this->shipping = $shipping;
+        $this->stock = $stock;
     }
+
+    /**
+     * @return int
+     */
+    public function getShopId()
+    {
+        return $this->shopId;
+    }
+
+    /**
+     * @param int $shopId
+     */
+    public function setShopId($shopId)
+    {
+        $this->shopId = $shopId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExternalId()
+    {
+        return $this->externalId;
+    }
+
+    /**
+     * @param string $externalId
+     */
+    public function setExternalId($externalId)
+    {
+        $this->externalId = $externalId;
+    }
+
+    /**
+     * @return PriceField
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param PriceField $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
+
+    /**
+     * @return array|ShippingField[]
+     */
+    public function getShipping()
+    {
+        return $this->shipping;
+    }
+
+    /**
+     * @param array|ShippingField[] $shipping
+     */
+    public function setShipping($shipping)
+    {
+        $this->shipping = $shipping;
+    }
+
+    /**
+     * @return StockField
+     */
+    public function getStock()
+    {
+        return $this->stock;
+    }
+
+    /**
+     * @param StockField $stock
+     */
+    public function setStock($stock)
+    {
+        $this->stock = $stock;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'price' => $this->price,
+            'shipping' => $this->shipping,
+            'stock' => $this->stock,
+        ];
+    }
+
 }
