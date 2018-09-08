@@ -10,8 +10,8 @@
   "homepage": "https://github.com/wienkit/beslist-shopitem-api-php-client",
   "require": {
     "php": ">=5.5.9",
-    "ext-json": ">=5.5.9",
-    "ext-curl": ">=5.5.9",
+    "ext-json": "*",
+    "ext-curl": "*",
     "tcdent/php-restclient": "^0.1.5"
   },
   "require-dev": {
