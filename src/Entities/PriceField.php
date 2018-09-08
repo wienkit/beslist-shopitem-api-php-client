@@ -24,7 +24,7 @@ class PriceField implements \JsonSerializable
      * @param ValueField $regularPrice
      * @param ValueField $previousPrice
      */
-    public function __construct(ValueField $regularPrice, ValueField $previousPrice)
+    public function __construct(ValueField $regularPrice, ValueField $previousPrice = null)
     {
         $this->regularPrice = $regularPrice;
         $this->previousPrice = $previousPrice;
@@ -38,7 +38,9 @@ class PriceField implements \JsonSerializable
      */
     public static function fromArray($response)
     {
-        $previousPrice = ValueField::fromArray($response['previousPrice']);
+        if (isset($response['previousPrice'])) {
+            $previousPrice = ValueField::fromArray($response['previousPrice']);
+        }
         $regularPrice = ValueField::fromArray($response['regularPrice']);
         return new static($regularPrice, $previousPrice);
     }
@@ -80,9 +82,12 @@ class PriceField implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return [
+        $result = [
             'regularPrice' => $this->regularPrice->getValue(),
-            'previousPrice' => $this->previousPrice->getValue(),
         ];
+        if ($this->previousPrice) {
+            $result['previousPrice'] = $this->previousPrice->getValue();
+        }
+        return $result;
     }
 }
