@@ -21,8 +21,8 @@ class BeslistShopitemClientTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $apiKey = 'DL2scMwuWQrBmplS4DCcAN5elRQTabTkva2Bk7nYcPfcaFgDUxKxa1pWkgpaSDxKMOI5bhFd';
-        $this->shopId = 565155; // -- YOUR SHOP ID --
+        $apiKey = '-- YOUR SHOPITEM API KEY --';
+        $this->shopId = 12345; // -- YOUR SHOP ID --
         $this->client = new BeslistShopitemClient($apiKey);
     }
 
