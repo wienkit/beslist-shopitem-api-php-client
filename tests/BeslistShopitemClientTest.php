@@ -19,16 +19,10 @@ class BeslistShopitemClientTest extends PHPUnit_Framework_TestCase
      */
     private $shopId;
 
-    /**
-     * @var string
-     */
-    private $itemId;
-
     public function setUp()
     {
         $apiKey = 'DL2scMwuWQrBmplS4DCcAN5elRQTabTkva2Bk7nYcPfcaFgDUxKxa1pWkgpaSDxKMOI5bhFd';
         $this->shopId = 565155; // -- YOUR SHOP ID --
-        $this->itemId = '12abcd13'; // -- YOUR TEST ITEM ID --
         $this->client = new BeslistShopitemClient($apiKey);
     }
 
@@ -45,25 +39,25 @@ class BeslistShopitemClientTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($shopItem, $shopItem2);
     }
 
-    public function testJsonEncoding()
-    {
-        $shopItem = $this->getShopItemFromArray();
-        $encoded = json_encode($shopItem);
-        $expectedResult = "{\"price\":{\"regularPrice\":12,\"previousPrice\":16},\"shipping\":[{\"destinationCountry\":\"nl\",\"price\":0,\"deliveryTime\":\"2 days\"},{\"destinationCountry\":\"be\",\"price\":6,\"deliveryTime\":\"6 days\"}],\"stock\":{\"level\":0}}";
-        $this->assertJsonStringEqualsJsonString($expectedResult, $encoded);
-    }
-
     public function testGetShopItem()
     {
-        $shopItem = $this->client->getShopItem($this->shopId, $this->itemId, '7-2');
+        $shopItem = $this->client->getShopItem($this->shopId, '1-1');
         $this->assertNotEmpty($shopItem);
     }
 
     public function testUpdateShopItem()
     {
         $shopItem = $this->getShopItemFromArray();
-        $updateResult = $this->client->updateShopItem($this->shopId, $this->itemId, $shopItem);
+        $updateResult = $this->client->updateShopItem($this->shopId, '1-1', $shopItem);
         $this->assertTrue($updateResult);
+    }
+
+    public function testJsonEncoding()
+    {
+        $shopItem = $this->getShopItemFromArray();
+        $encoded = json_encode($shopItem);
+        $expectedResult = "{\"price\":{\"regularPrice\":12,\"previousPrice\":16},\"shipping\":[{\"destinationCountry\":\"nl\",\"price\":0,\"deliveryTime\":\"2 days\"},{\"destinationCountry\":\"be\",\"price\":6,\"deliveryTime\":\"6 days\"}],\"stock\":{\"level\":0}}";
+        $this->assertJsonStringEqualsJsonString($expectedResult, $encoded);
     }
 
     /**
