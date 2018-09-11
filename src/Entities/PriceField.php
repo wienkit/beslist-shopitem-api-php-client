@@ -38,6 +38,7 @@ class PriceField implements \JsonSerializable
      */
     public static function fromArray($response)
     {
+        $previousPrice = null;
         if (isset($response['previousPrice'])) {
             $previousPrice = ValueField::fromArray($response['previousPrice']);
         }
