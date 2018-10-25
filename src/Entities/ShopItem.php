@@ -46,7 +46,7 @@ class ShopItem implements \JsonSerializable
         foreach ($values['shipping'] as $destination) {
             $shipping[] = ShippingField::fromArray($destination);
         }
-        $stock = StockField::fromArray($values['stock']);
+        $stock = !empty($values['stock']) ? StockField::fromArray($values['stock']) : null;
         return new static($price, $shipping, $stock);
     }
 
@@ -69,7 +69,7 @@ class ShopItem implements \JsonSerializable
      * @param array $shipping
      * @param StockField $stock
      */
-    public function __construct(PriceField $price, array $shipping, StockField $stock)
+    public function __construct(PriceField $price, array $shipping, StockField $stock = null)
     {
         $this->price = $price;
         $this->shipping = $shipping;
@@ -161,11 +161,14 @@ class ShopItem implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return [
+        $result = [
             'price' => $this->price,
             'shipping' => $this->shipping,
-            'stock' => $this->stock,
         ];
+        if (!empty($this->stock)) {
+            $result['stock'] = $this->stock;
+        }
+        return $result;
     }
 
 }

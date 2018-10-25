@@ -52,11 +52,26 @@ class BeslistShopitemClientTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($updateResult);
     }
 
+    public function testUpdateShopItemWithoutStock()
+    {
+        $shopItem = $this->getShopItemWithoutStockFromArray();
+        $updateResult = $this->client->updateShopItem($this->shopId, '1-1', $shopItem);
+        $this->assertTrue($updateResult);
+    }
+
     public function testJsonEncoding()
     {
         $shopItem = $this->getShopItemFromArray();
         $encoded = json_encode($shopItem);
         $expectedResult = "{\"price\":{\"regularPrice\":12,\"previousPrice\":16},\"shipping\":[{\"destinationCountry\":\"nl\",\"price\":0,\"deliveryTime\":\"2 days\"},{\"destinationCountry\":\"be\",\"price\":6,\"deliveryTime\":\"6 days\"}],\"stock\":{\"level\":0}}";
+        $this->assertJsonStringEqualsJsonString($expectedResult, $encoded);
+    }
+
+    public function testJsonEncodingWithoutStock()
+    {
+        $shopItem = $this->getShopItemWithoutStockFromArray();
+        $encoded = json_encode($shopItem);
+        $expectedResult = "{\"price\":{\"regularPrice\":12,\"previousPrice\":16},\"shipping\":[{\"destinationCountry\":\"nl\",\"price\":0,\"deliveryTime\":\"2 days\"},{\"destinationCountry\":\"be\",\"price\":6,\"deliveryTime\":\"6 days\"}]}";
         $this->assertJsonStringEqualsJsonString($expectedResult, $encoded);
     }
 
@@ -98,6 +113,43 @@ class BeslistShopitemClientTest extends PHPUnit_Framework_TestCase
                 'level' => [
                     'value' => 0
                 ],
+            ],
+        ]);
+    }
+
+    /**
+     * @return ShopItem
+     */
+    private function getShopItemWithoutStockFromArray()
+    {
+        return ShopItem::fromArray([
+            'price' => [
+                'regularPrice' => [
+                    'value' => 12.00
+                ],
+                'previousPrice' => [
+                    'value' => 16.00
+                ],
+            ],
+            'shipping' => [
+                [
+                    'destinationCountry' => 'nl',
+                    'price' => [
+                        'value' => 0,
+                    ],
+                    'deliveryTime' => [
+                        'value' => '2 days',
+                    ],
+                ],
+                [
+                    'destinationCountry' => 'be',
+                    'price' => [
+                        'value' => 6,
+                    ],
+                    'deliveryTime' => [
+                        'value' => '6 days',
+                    ],
+                ]
             ],
         ]);
     }
