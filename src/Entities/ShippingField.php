@@ -2,6 +2,8 @@
 
 namespace Wienkit\BeslistShopitemClient\Entities;
 
+use Wienkit\BeslistShopitemClient\Exceptions\BeslistFormatException;
+
 /**
  * Class ShippingField.
  *
@@ -45,7 +47,13 @@ class ShippingField implements \JsonSerializable
     public static function fromArray(array $response)
     {
         $destinationCountry = $response['destinationCountry'];
+        if (!isset($response['price']) || !is_array($response['price'])) {
+            throw new BeslistFormatException('Could not create price on shippingfield');
+        }
         $price = ValueField::fromArray($response['price']);
+        if (!isset($response['deliveryTime']) || !is_array($response['deliveryTime'])) {
+            throw new BeslistFormatException('Could not create deliveryTime on shippingfield');
+        }
         $deliveryTime = ValueField::fromArray($response['deliveryTime']);
         return new static($destinationCountry, $price, $deliveryTime);
     }

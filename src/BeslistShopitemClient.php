@@ -61,6 +61,7 @@ class BeslistShopitemClient
      * @param $productId
      * @return ShopItem
      * @throws BeslistShopitemException
+     * @throws Exceptions\BeslistFormatException
      */
     public function getShopItem($shopId, $productId)
     {

@@ -2,6 +2,8 @@
 
 namespace Wienkit\BeslistShopitemClient\Entities;
 
+use Wienkit\BeslistShopitemClient\Exceptions\BeslistFormatException;
+
 /**
  * Class PriceField.
  *
@@ -33,14 +35,19 @@ class PriceField implements \JsonSerializable
     /**
      * Instantiates a new PriceField instance.
      *
-     * @param $response
+     * @param array $response
      * @return PriceField
+     *
+     * @throws BeslistFormatException
      */
     public static function fromArray($response)
     {
         $previousPrice = null;
         if (isset($response['previousPrice'])) {
             $previousPrice = ValueField::fromArray($response['previousPrice']);
+        }
+        if (!isset($response['regularPrice']) || !is_array($response['regularPrice'])) {
+            throw new BeslistFormatException('Could not create regularPrice on pricefield');
         }
         $regularPrice = ValueField::fromArray($response['regularPrice']);
         return new static($regularPrice, $previousPrice);

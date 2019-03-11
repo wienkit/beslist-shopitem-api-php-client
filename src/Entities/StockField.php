@@ -2,6 +2,8 @@
 
 namespace Wienkit\BeslistShopitemClient\Entities;
 
+use Wienkit\BeslistShopitemClient\Exceptions\BeslistFormatException;
+
 /**
  * Class StockField.
  *
@@ -28,9 +30,14 @@ class StockField implements \JsonSerializable
      *
      * @param array $response
      * @return StockField
+     *
+     * @throws BeslistFormatException
      */
     public static function fromArray(array $response)
     {
+        if (!isset($response['price']) || !is_array($response['price'])) {
+            throw new BeslistFormatException('Could not create level on StockField');
+        }
         $level = ValueField::fromArray($response['level']);
         return new static($level);
     }

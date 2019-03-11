@@ -2,6 +2,8 @@
 
 namespace Wienkit\BeslistShopitemClient\Entities;
 
+use Wienkit\BeslistShopitemClient\Exceptions\BeslistFormatException;
+
 /**
  * Class ShopItem
  *
@@ -35,16 +37,29 @@ class ShopItem implements \JsonSerializable
     protected $stock;
 
     /**
-     * Instantiates a new Offer/ShopItem from an array
+     * Instantiates a new Offer/ShopItem from an array.
+     *
      * @param array $values
+     *   The values array.
      * @return ShopItem
+     *   The newly created ShopItem
+     *
+     * @throws BeslistFormatException
      */
     public static function fromArray(array $values)
     {
+        if (!isset($values['price']) || !is_array($values['price'])) {
+            throw new BeslistFormatException('Could not create pricefield');
+        }
         $price = PriceField::fromArray($values['price']);
         $shipping = [];
-        foreach ($values['shipping'] as $destination) {
-            $shipping[] = ShippingField::fromArray($destination);
+        if (isset($values['shipping'])) {
+            foreach ($values['shipping'] as $destination) {
+                if (!is_array($destination)) {
+                    throw new BeslistFormatException('Could not create shipping');
+                }
+                $shipping[] = ShippingField::fromArray($destination);
+            }
         }
         $stock = !empty($values['stock']) ? StockField::fromArray($values['stock']) : null;
         return new static($price, $shipping, $stock);
@@ -54,6 +69,8 @@ class ShopItem implements \JsonSerializable
      * Returns a full ShopItem from the http response.
      * @param array $response
      * @return ShopItem
+     * @throws BeslistFormatException
+     * @throws \Wienkit\BeslistShopitemClient\Exceptions\BeslistShopitemException
      */
     public static function fromResponse(array $response)
     {
